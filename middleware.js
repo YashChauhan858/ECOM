@@ -1,4 +1,4 @@
-import { fetchFromCache } from "./caching/redis.js";
+import RedisConnection from "./caching/redis.js";
 import { environment } from "./environment/environment.js";
 import jwt from "jsonwebtoken";
 
@@ -26,7 +26,7 @@ export const authCheck = (req, res, next) => {
 
 export const cacheData = async (req, res, next) => {
   try {
-    const cache = await fetchFromCache(req.originalUrl);
+    const cache = await RedisConnection.fetchFromCache(req.originalUrl);
     req.cachedData = cache ?? null;
     next();
   } catch (error) {

@@ -1,4 +1,4 @@
-import { storeData } from "../caching/redis.js";
+import RedisConnection from "../caching/redis.js";
 
 export const getUsersViaId = async (req, res) => {
   const userId = req?.params?.id;
@@ -12,7 +12,7 @@ export const getUsersViaId = async (req, res) => {
   // simulate delay
   await new Promise((resolve) => setTimeout(resolve, 3000));
 
-  if (!cachedData) await storeData(req.originalUrl, userId);
+  if (!cachedData) await RedisConnection.storeData(req.originalUrl, userId, 60);
 
   res.send(`User id is ${userId}`);
 };

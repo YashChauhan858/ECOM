@@ -8,37 +8,42 @@
 
 import Redis from "ioredis";
 
-const redisClient = new Redis();
+export default class RedisConnection {
+  instance = null;
 
-redisClient.on("connect", () => {
-  console.log("Redis connected");
-});
+  static init() {
+    if (this.instance) return this.instance;
 
-// We will use string data structure
-export const fetchFromCache = async (key) => {
-  if (!key) return null;
-  try {
-    const data = await redisClient.get(key);
-    if (!data) return null;
-    return data;
-  } catch (error) {
-    return null;
+    this.instance = new Redis();
+
+    this.instance.on("connect", () => {
+      console.log("Redis connected");
+    });
+
+    return this.instance;
   }
-};
 
-/**
- *
- * @param {String} key - key to store
- * @param {Object} value - object to store
- * @param {number | undefined} exp - expiry time in seconds
- * @returns
- */
-export const storeData = async (key, value, exp = undefined) => {
-  if (!key || !value) return null;
-  try {
-    await redisClient.set(key, JSON.stringify(value));
-    if (exp) await redisClient.expire(key, exp);
-  } catch (error) {
-    return null;
+  static async fetchFromCache(key) {
+    if (!key) return null;
+    if (!this.instance) RedisConnection.init();
+
+    try {
+      const data = await this?.instance?.get(key);
+      if (!data) return null;
+      return data;
+    } catch (error) {
+      return null;
+    }
   }
-};
+
+  static async storeData(key, value, exp = undefined) {
+    if (!key || !value) return null;
+    if (!this.instance) RedisConnection.init();
+    try {
+      await this?.instance?.set(key, JSON.stringify(value));
+      if (exp) await this?.instance?.expire(key, exp);
+    } catch (error) {
+      return null;
+    }
+  }
+}
