@@ -1,3 +1,4 @@
+import { fetchFromCache } from "./caching/redis.js";
 import { environment } from "./environment/environment.js";
 import jwt from "jsonwebtoken";
 
@@ -21,4 +22,15 @@ export const authCheck = (req, res, next) => {
     req.user = user;
     next();
   });
+};
+
+export const cacheData = async (req, res, next) => {
+  try {
+    const cache = await fetchFromCache(req.originalUrl);
+    req.cachedData = cache ?? null;
+    next();
+  } catch (error) {
+    req.cachedData = null;
+    next();
+  }
 };

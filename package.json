@@ -5,7 +5,10 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "dev:start": "nodemon server.js"
+    "spin:redis": "docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest",
+    "dev:start:redis": "docker start redis-stack || docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest",
+    "dev:start": "nodemon server.js",
+    "start": "pnpm run dev:start:redis && pnpm run dev:start"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +18,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "ioredis": "^5.4.1",
     "jsonwebtoken": "^9.0.2",
     "nodemon": "^3.1.4"
   }

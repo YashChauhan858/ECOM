@@ -1,8 +1,19 @@
-export const getUsersViaId = (req, res) => {
+import { storeData } from "../caching/redis.js";
+
+export const getUsersViaId = async (req, res) => {
   const userId = req?.params?.id;
   if (!userId) {
     return res.status(404).send("User id is required");
   }
+  const cachedData = req?.cachedData ?? null;
+
+  if (cachedData) return res.send("User id is " + cachedData);
+
+  // simulate delay
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
+  if (!cachedData) await storeData(req.originalUrl, userId);
+
   res.send(`User id is ${userId}`);
 };
 
