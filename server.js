@@ -1,7 +1,7 @@
 import { environment } from "./environment/environment.js";
 import cors from "cors";
 
-import { invalidEndPoint } from "./middleware.js";
+import { authCheck, invalidEndPoint } from "./middleware.js";
 
 import userRoute from "./routes/userRoute.js";
 import loginRoute from "./routes/loginRoute.js";
@@ -14,8 +14,8 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", loginRoute);
-app.use("/api/user", userRoute);
-app.use("/api/product", productRoute);
+app.use("/api/user", authCheck, userRoute);
+app.use("/api/product", authCheck, productRoute);
 
 // Middlewares
 invalidEndPoint(app);
