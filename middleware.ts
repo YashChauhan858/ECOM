@@ -35,6 +35,7 @@ export const authCheck = (req: Request, res: Response, next: NextFunction) => {
       return;
     }
   );
+  return;
 };
 
 export const cacheData = async (
