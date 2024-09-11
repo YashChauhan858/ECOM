@@ -1,11 +1,7 @@
 import dotenv from "dotenv";
+import { IEnvironment } from "../types";
 
 dotenv.config();
-interface IEnvironment {
-  port: number | string;
-  env: string;
-  jwtSecret?: string;
-}
 
 export const environment: IEnvironment = {
   port: process.env["PORT"] || 3000,
