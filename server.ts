@@ -17,6 +17,8 @@ app.use("/api/auth", loginRoute);
 app.use("/api/user", authCheck, cacheData, userRoute);
 app.use("/api/product", authCheck, productRoute);
 
+export type ExpressType = typeof app;
+
 // Middlewares
 invalidEndPoint(app);
 
